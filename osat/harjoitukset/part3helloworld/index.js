@@ -18,6 +18,7 @@ app.use(express.json())
 app.use(requestLogger)
 app.use(unknownEndpoint)
 app.use(cors())
+app.use(express.static('dist'))
 
 let notes = [
     {
@@ -70,7 +71,7 @@ app.post('/api/notes', (req, res) => {
     res.json(note)
 })
 
-const PORT = process.nextTick.PORT || 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
