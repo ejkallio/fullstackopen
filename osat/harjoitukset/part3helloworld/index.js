@@ -19,7 +19,6 @@ app.use(requestLogger)
 app.use(express.static('dist'))
 app.use(cors())
 
-
 let notes = [
     {
       id: 1,
