@@ -2,8 +2,8 @@ import axios from 'axios'
 const baseUrl = '/api/notes'
 
 const getAll = () => {
-    const req = axios.get(baseUrl)
-    return req.then(res => res.data)
+    const request = axios.get(baseUrl)
+    return request.then(response => response.data)
 }
 
 const create = newObject => {
