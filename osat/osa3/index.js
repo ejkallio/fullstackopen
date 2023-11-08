@@ -4,13 +4,15 @@ const app = express()
 const cors = require('cors')
 var morgan = require('morgan')
 const Person = require('./models/person')
+const note = require('../harjoitukset/part3helloworld/models/note')
 
 morgan.token('body', req => {
      return JSON.stringify(req.body)
 })
-app.use(express.json())
+
 app.use(cors())
 app.use(express.static('dist'))
+app.use(express.json())
 app.use(morgan(':method :url :body'))
 app.use(morgan('tiny'))
 
@@ -43,26 +45,27 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    console.log(id)
-    const person = persons.find(person => person.id === id)
-    if (person) {
-        res.json(person)
-    } else {
-        res.status(404).end()
-    }
+    Person.findById(req.params.id)
+    .then(person => {
+        if (person) {
+            res.json(person)
+        } else {
+            res.status(404).end()
+        }
+    })
+    .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    persons = persons.filter(note => note.id !== id)
-
-    res.status(204).end()
+app.delete('/api/persons/:id', (req, res, next) => {
+    Person.findByIdAndRemove(req.params.id)
+        .then(result => {
+            res.status(204).end()
+        })
+        .catch(error => next(error))
 })
 
 
-
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body
     
     if (!body.name || !body.number) {
@@ -71,35 +74,58 @@ app.post('/api/persons', (req, res) => {
         })
     }
 
-    if (persons.filter(person => person.name === body.name).length > 0) {
-        return res.status(409).json({
-            error: 'name must be unique' 
-        })
-    }
-
-    const person =  new Person ({
+    const person = new Person ({
         name: body.name,
-        number: body.number,
-        /* id: Math.floor(Math.random() * (100 - 1) + 1) */
+        number: body.number
     })
 
     person.save().then(savedPerson => {
         res.json(savedPerson)
     })
-    /* persons = persons.concat(person)
-    res.json(person) */
-    console.log(morgan.token('type', function (req, res) {return stringify(req)}))
 })
 
-app.get('/api/info', (req, res) => {
-    const n = persons.length
-    const date = new Date()
-    console.log(n)
-    res.send(`<div>
-        Phonebook has info for ${n} people </br>
-        ${date}
-    </div>`)
+app.put('/api/persons/:id', (req, res, next) => {
+    const body = req.body
+
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+
+    Person.findOneAndUpdate({ name: person.name }, person, { new: true})
+        .then(updatedPerson => {
+            res.json(updatedPerson)
+        })
+        .catch(error => next(error))
 })
+
+app.get('/api/info', async (req, res, next) => {
+    try {
+        const count = await Person.countDocuments({})
+        const date = new Date()
+        console.log(count)
+        res.send(`<div>
+            Phonebook has info for ${count} people <br>
+            ${date}
+        </div>`)
+    } catch (error) {
+        console.error(error)
+        next(error)
+    }
+})
+
+const errorHandler = (error, req, res, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return res.status(400).send({ error: 'malformatted id '})
+    }
+
+    next(error)
+}
+
+app.use(errorHandler)
+
 const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
