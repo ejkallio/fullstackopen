@@ -41,7 +41,7 @@ const App = () => {
             return
           })
           .catch(error => {
-            setErrorMessage(
+            changeErrorMessage(
               `Information of ${newName} has already been removed from server`
             )
             setPersons(persons.filter(person => person.id !== id ))
@@ -64,6 +64,12 @@ const App = () => {
         changeMessage(`Added ${returnedPerson.name} to phonebook`)
         setNewName('')
         setNewNumber('')
+      })
+      .catch(error => {
+        changeErrorMessage(
+          Object.values(error.response.data) + '.'
+        )
+        console.log(error.response.data)
       })
   }
 
