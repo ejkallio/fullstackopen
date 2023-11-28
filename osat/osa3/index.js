@@ -16,7 +16,7 @@ app.use(express.json())
 app.use(morgan(':method :url :body'))
 app.use(morgan('tiny'))
 
-let persons = [
+/* let persons = [
   {
     id: 1,
     name: 'Arto Hellas',
@@ -37,7 +37,8 @@ let persons = [
     name: 'Mary Poppendick',
     number: '39-23-6423122'
   },
-]
+] */
+
 app.get('/api/persons', (req, res) => {
   Person.find({}).then(persons => {
     res.json(persons)
@@ -58,6 +59,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
+    // eslint-disable-next-line no-unused-vars
     .then(result => {
       res.status(204).end()
     })
@@ -127,6 +129,7 @@ const errorHandler = (error, req, res, next) => {
 
 app.use(errorHandler)
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
