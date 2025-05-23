@@ -1,5 +1,5 @@
 const listHelper = require('../utils/list_helper')
-const { test, describe } = require('node:test')
+const { test, } = require('node:test')
 const assert = require('node:assert')
 
 test('dummy returns one', () => {
