@@ -5,20 +5,20 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "node --watch index.js",
     "build:ui": "rm -rf dist && cd ../part2singlepage/ && npm run build && cp -r dist ../part3helloworld",
     "deploy": "fly deploy",
     "deploy:full": "npm run build:ui && npm run deploy",
     "logs:prod": "fly logs",
     "lint": "eslint .",
-    "test": "jest --verbose"
+    "test": "node --test"
   },
   "author": "Elias Kallio",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "express": "^4.18.2",
+    "express": "^5.1.0",
     "mongodb": "^6.2.0",
     "mongoose": "^8.0.0"
   },
@@ -30,6 +30,5 @@
   },
   "jest": {
     "testEnvironment": "node"
-    
   }
 }

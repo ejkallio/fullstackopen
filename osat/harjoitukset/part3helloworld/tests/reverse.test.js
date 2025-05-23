@@ -1,35 +1,22 @@
+const { test } = require('node:test')
+const assert = require('node:assert')
+
 const reverse = require('../utils/for_testing').reverse
 
 test('reverse of a', () => {
   const result = reverse('a')
 
-  expect(result).toBe('a')
+  assert.strictEqual(result, 'a')
 })
 
 test('reverse of react', () => {
   const result = reverse('react')
 
-  expect(result).toBe('tcaer')
+  assert.strictEqual(result, 'tcaer')
 })
 
 test('reverse of saippuakauppias', () => {
   const result = reverse('saippuakauppias')
 
-  expect(result).toBe('saippuakauppias')
-})
-
-const average = require('../utils/for_testing').average
-
-describe('average', () => {
-  test('of one value is the value itself', () => {
-    expect(average([1])).toBe(1)
-  })
-
-  test('of many is calculated right', () => {
-    expect(average([1, 2, 3, 4, 5, 6])).toBe(3.5)
-  })
-
-  test('of empty array is zero', () => {
-    expect(average([])).toBe(0)
-  })
+  assert.strictEqual(result, 'saippuakauppias')
 })

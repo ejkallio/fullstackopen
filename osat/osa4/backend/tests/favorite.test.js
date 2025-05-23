@@ -1,4 +1,6 @@
 const favoriteBlog = require('../utils/list_helper').favoriteBlog
+const { test, describe } = require('node:test')
+const assert = require('node:assert')
 
 const oneBlog = [
   {
@@ -64,7 +66,7 @@ const blogs = [
 
 describe('favorite out of', () => {
   test('one blog', () => {
-    expect(favoriteBlog(oneBlog)).toEqual({
+    assert.deepStrictEqual(favoriteBlog(oneBlog), {
       _id: "5a422a851b54a676234d17f7",
       title: "React patterns",
       author: "Michael Chan",
@@ -73,4 +75,17 @@ describe('favorite out of', () => {
       __v: 0
     })
   })
+  	test('of several blogs', () => {
+		assert.deepStrictEqual(favoriteBlog(blogs), {
+			_id: "5a422b3a1b54a676234d17f9",
+    		title: "Canonical string reduction",
+    		author: "Edsger W. Dijkstra",
+    		url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+    		likes: 12,
+    		__v: 0	
+		})
+	})
+	test('of empty array', () => {
+		assert.strictEqual(favoriteBlog([]), 0)
+	})
 })

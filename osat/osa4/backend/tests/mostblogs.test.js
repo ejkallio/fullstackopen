@@ -1,7 +1,6 @@
-const totalLikes = require('../utils/list_helper').totalLikes
 const { test, describe } = require('node:test')
 const assert = require('node:assert')
-
+const mostBlogs = require('../utils/list_helper').mostBlogs
 
 const oneBlog = [
   {
@@ -65,19 +64,15 @@ const blogs = [
   }  
 ]
 
-describe('Total likes', () => {
-  test('of one blog', () => {
-    //expect(totalLikes(oneBlog)).toBe(7)
-	assert.strictEqual(totalLikes(oneBlog), 7)
-  })
-
-  test('of several blogs', () => {
-    //expect(totalLikes(blogs)).toBe(36)
-	assert.strictEqual(totalLikes(blogs), 36)
-  })
-
-  test('of empty array', () => {
-    //expect(totalLikes([])).toBe(0)
-	assert.strictEqual(totalLikes([]), 0)
+describe('Most blogs', () => {
+	test('of one blog', () => {
+		assert.deepStrictEqual(mostBlogs(oneBlog), { author: "Michael Chan", blogs: 1})
 	})
+	test('of several blogs', () => {
+		assert.deepStrictEqual(mostBlogs(blogs), { author: "Robert C. Martin", blogs: 3 })
+	})
+	test('of empty array', () => {
+		assert.strictEqual(mostBlogs([]), 0)
+	})
+	
 })
