@@ -1,4 +1,4 @@
-const { test, after, beforeEach } = require('node:test')
+const { test, after, beforeEach, describe } = require('node:test')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
@@ -58,6 +58,59 @@ test('a valid blog can be added', async () => {
   const titles = blogsAtEnd.map(n => n.title)
   assert(titles.includes('Test Blog'))
 })
+
+test('likes is given the value 0 if undefined', async () => {
+  const newBlog = {
+    title: 'Test Blog',
+    author: 'Elias Kallio',
+    url: 'none',
+  }
+
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const savedBlog = response.body
+
+  assert.strictEqual(savedBlog.likes, 0)
+})
+
+describe('POST with missing fields', () => {
+  test('error if title is undefined', async () => {
+    const newBlog = {
+      author: 'Elias Kallio',
+      url: 'none',
+    }
+
+    newBlog.title = undefined
+
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    assert.strictEqual(response.status, 400)
+  })
+
+  test('error if url is undefined', async () => {
+    const newBlog = {
+      title: 'Test Blog',
+      author: 'Elias Kallio',
+    }
+
+    newBlog.url = undefined
+
+    const response = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+    assert.strictEqual(response.status, 400)
+  })
+})
+
 
 after(async () => {
   await mongoose.connection.close()
