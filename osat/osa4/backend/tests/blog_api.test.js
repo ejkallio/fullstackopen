@@ -55,7 +55,7 @@ test('a valid blog can be added', async () => {
   const blogsAtEnd = await helper.blogsInDb()
   assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
 
-  const titles = blogsAtEnd.map(n => n.title)
+  const titles = blogsAtEnd.map(b => b.title)
   assert(titles.includes('Test Blog'))
 })
 
@@ -111,6 +111,42 @@ describe('POST with missing fields', () => {
   })
 })
 
+describe('Deletion of a Blog', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    const titles = blogsAtEnd.map(b => b.title)
+    assert(!titles.includes(blogToDelete.title))
+
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+  })
+})
+
+describe('Editing a blog', () => {
+  test('a blogs likes can be updated', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToEdit = blogsAtStart[0]
+
+    const editedLikes = { likes: blogToEdit.likes + 1}
+
+    const response = await api
+      .put('/api/blogs/' + blogToEdit.id)
+      .send(editedLikes)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(response.body.likes, editedLikes.likes)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const updatedBlog = blogsAtEnd.find(b => b.id === blogToEdit.id)
+    assert.strictEqual(updatedBlog.likes, editedLikes.likes)
+  })
+})
 
 after(async () => {
   await mongoose.connection.close()
