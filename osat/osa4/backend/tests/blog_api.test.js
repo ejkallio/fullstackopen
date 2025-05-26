@@ -17,17 +17,25 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-test.only('blogs are returned as json', async () => {
+test('blogs are returned as json', async () => {
   await api
     .get('/api/blogs')
     .expect(200)
     .expect('Content-Type', /application\/json/)
 })
 
-test.only('all blogs are returned', async () => {
+test('all blogs are returned', async () => {
   const response = await api.get('/api/blogs')
 
   assert.strictEqual(response.body.length, helper.initialBlogs.length)
+})
+
+test.only('each blog as an id property', async () => {
+  const response = await api.get('/api/blogs')
+
+  response.body.forEach(blog => {
+    assert.ok(blog.id, 'Id field is incorrectly named')
+  })
 })
 
 after(async () => {
