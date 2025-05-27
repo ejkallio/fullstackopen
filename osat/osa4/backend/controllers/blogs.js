@@ -1,8 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
-
+const { userExtractor } = require('../utils/middleware')
 //const getTokenFrom = request => {
 //  const authorization = request.get('authorization')
 //  if (authorization && authorization.startsWith('Bearer ')) {
@@ -17,20 +15,12 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-blogsRouter.post('/', async (request, response) => {
+blogsRouter.post('/', userExtractor, async (request, response) => {
   if (!request.body.title || !request.body.url) {
     return response.status(400).json({error: 'title and url fields are required'})
   }
   const body = request.body
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-  const user = await User.findById(decodedToken.id)
-
-  if (!user) {
-    return response.status(400).json({ error: 'userId missing or not valid '})
-  }
+  const user = request.user
 
   const blog = new Blog({
     title: body.title,
@@ -47,22 +37,13 @@ blogsRouter.post('/', async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
-blogsRouter.delete('/:id', async (request, response) => {
-  const token = request.token
-
-  if (!token) {
-    return response.status(401).json({ error: 'token missing or invalid' })
-  }
-
-  const decodedToken = jwt.verify(token, process.env.SECRET)
-  if(!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
+blogsRouter.delete('/:id', userExtractor, async (request, response) => {
+  const user = request.user
 
   const blog = await Blog.findById(request.params.id)
 
-  if (blog.user.toString() !== decodedToken.id) {
-    return response.status(401).json({ error: 'you are not authorized to delete another users notes' })
+  if (blog.user.toString() !== user._id.toString()) {
+    return response.status(403).json({ error: 'you are not authorized to delete another users notes' })
   }
 
   await blog.deleteOne()
