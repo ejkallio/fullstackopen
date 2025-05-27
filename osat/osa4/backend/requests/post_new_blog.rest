@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVqa2FsbGlvIiwiaWQiOiI2ODM1YjQwNGYwZTk4ZTYzODljZTQxZjIiLCJpYXQiOjE3NDgzNTE0MjZ9.xFM1VHtPAHQi75DF9FOBmBX-7ytdigMcC0RJJ3a7GaE
 
 {
-  "title": "munblogi",
-  "author": "meitsi",
-  "url": "eioo.fi",
-  "likes": 10,
-  "userId": "6835b1c621de59a20b754308"
+  "title": "randomblogi",
+  "author": "mun blogi",
+  "url": "blogi.fi",
+  "likes": 50
 }
