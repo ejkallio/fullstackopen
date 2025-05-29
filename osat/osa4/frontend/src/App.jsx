@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -97,29 +99,17 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
   }
 
-  const addBlog = async (event) => {
-    event.preventDefault()
-
-    try {
-      const blogObject = {
-        title: newTitle,
-        author: newAuthor,
-        url: newUrl,
-      }
-
-      const returnedBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(returnedBlog))
-
-      setNewTitle('')
-      setNewAuthor('')
-      setNewUrl('')
-      setMessage(`a new blog "${returnedBlog.title}" by ${returnedBlog.author} was added`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
-    } catch (error) {
-      console.error('Error creating blog:', error)
-    }
+  const addBlog = (blogObject) => {
+    blogFormRef.current.toggleVisibility()
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        setMessage(`a new blog "${returnedBlog.title}" by ${returnedBlog.author} was added`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      })
   }
 
   const blogForm = () => (
@@ -158,6 +148,8 @@ const App = () => {
     </div>
   )
 
+  const blogFormRef = useRef()
+
   if (user === null) {
     return (
       loginForm()
@@ -172,7 +164,10 @@ const App = () => {
 
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
 
-      {blogForm()}
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+        <BlogForm createBlog={addBlog} />
+      </Togglable>
+
 
       {blogs
         .filter(blog => blog.user && blog.user.username === user.username)
