@@ -169,6 +169,18 @@ const App = () => {
     }
   }
 
+  const handleRemove = async (blogToRemove) => {
+    const confirm = window.confirm(`Remove ${blogToRemove.title} by ${blogToRemove.author}`)
+    if (!confirm) return
+    
+    try {
+      await blogService.remove(blogToRemove.id)
+      setBlogs(blogs.filter(b => b.id !== blogToRemove.id))
+    } catch (error) {
+      console.error('Error deleting blog:', error)
+    }
+  }
+
   const blogFormRef = useRef()
 
   if (user === null) {
@@ -194,7 +206,7 @@ const App = () => {
         .slice()
         .sort((a,b) => b.likes - a.likes)
         .map(blog =>
-        <Blog key={blog.id} blog={blog} onLike={handleLike} />
+        <Blog key={blog.id} blog={blog} onLike={handleLike} onRemove={handleRemove} />
       )}
     </div>
   )

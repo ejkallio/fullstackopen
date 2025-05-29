@@ -2,7 +2,7 @@ import Togglable from "./Togglable"
 import { useState } from "react"
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, onLike }) => {
+const Blog = ({ blog, onLike, onRemove }) => {
 
   const blogStyle = {
     paddingTop: 10,
@@ -23,6 +23,7 @@ const Blog = ({ blog, onLike }) => {
           <p>{blog.url}</p>
           <p>{blog.likes} <button onClick={() => onLike(blog)}>like</button></p>
           <p>{blog.user.name}</p>
+          <button onClick={() => onRemove(blog)}>remove</button>
         </div>
       </Togglable>
     </div>
