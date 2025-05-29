@@ -158,8 +158,12 @@ const App = () => {
     try {
     const returnedBlog = await blogService.update(blogToUpdate.id, updatedBlog)
 
-    // Update the blog list
-    setBlogs(blogs.map(b => b.id !== blogToUpdate.id ? b : returnedBlog))
+    const fullBlog = {
+      ...returnedBlog,
+      user: blogToUpdate.user
+    }  
+    
+    setBlogs(blogs.map(b => b.id !== blogToUpdate.id ? b : fullBlog))
     } catch (error) {
       console.error('Error updating likes:', error)
     }

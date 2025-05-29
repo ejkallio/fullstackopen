@@ -2,8 +2,7 @@ import Togglable from "./Togglable"
 import { useState } from "react"
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, setBlogs, blogs, onLike }) => {
-  const [likes, setLikes] = useState(blog.likes)
+const Blog = ({ blog, onLike }) => {
 
   const blogStyle = {
     paddingTop: 10,
@@ -13,20 +12,6 @@ const Blog = ({ blog, setBlogs, blogs, onLike }) => {
     marginBottom: 5
   }
 
-  const handleLike = async () => {
-    const updatedBlog = {
-      ...blog,
-      likes: likes + 1,
-      user: blog.user.id
-    }
-
-    try {
-      const returnedBlog = await blogService.update(blog.id, updatedBlog)
-      setLikes(returnedBlog.likes)
-    } catch (error) {
-      console.error('Error updating likes:', error)
-    }
-  }
   return (
   <div style={blogStyle}>
     <div>
