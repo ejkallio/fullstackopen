@@ -2,7 +2,7 @@ import Togglable from "./Togglable"
 import { useState } from "react"
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, onLike, onRemove }) => {
+const Blog = ({ blog, onLike, onRemove, currentUser }) => {
 
   const blogStyle = {
     paddingTop: 10,
@@ -11,6 +11,8 @@ const Blog = ({ blog, onLike, onRemove }) => {
     borderWidth: 1,
     marginBottom: 5
   }
+
+  const isOwner = blog.user?.username === currentUser?.username
 
   return (
   <div style={blogStyle}>
@@ -23,7 +25,7 @@ const Blog = ({ blog, onLike, onRemove }) => {
           <p>{blog.url}</p>
           <p>{blog.likes} <button onClick={() => onLike(blog)}>like</button></p>
           <p>{blog.user.name}</p>
-          <button onClick={() => onRemove(blog)}>remove</button>
+          {isOwner &&<button onClick={() => onRemove(blog)}>remove</button>}
         </div>
       </Togglable>
     </div>
