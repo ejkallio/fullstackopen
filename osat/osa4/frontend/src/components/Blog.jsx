@@ -1,6 +1,10 @@
 import Togglable from "./Togglable"
+import { useState } from "react"
+import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, setBlogs, blogs, onLike }) => {
+  const [likes, setLikes] = useState(blog.likes)
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -9,6 +13,20 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   }
 
+  const handleLike = async () => {
+    const updatedBlog = {
+      ...blog,
+      likes: likes + 1,
+      user: blog.user.id
+    }
+
+    try {
+      const returnedBlog = await blogService.update(blog.id, updatedBlog)
+      setLikes(returnedBlog.likes)
+    } catch (error) {
+      console.error('Error updating likes:', error)
+    }
+  }
   return (
   <div style={blogStyle}>
     <div>
@@ -18,7 +36,7 @@ const Blog = ({ blog }) => {
       <Togglable buttonLabel="view" hideLabel="hide">
         <div>
           <p>{blog.url}</p>
-          <p>{blog.likes}</p>
+          <p>{blog.likes} <button onClick={() => onLike(blog)}>like</button></p>
           <p>{blog.user.name}</p>
         </div>
       </Togglable>

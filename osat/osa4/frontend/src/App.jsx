@@ -148,6 +148,23 @@ const App = () => {
     </div>
   )
 
+  const handleLike = async(blogToUpdate) => {
+    const updatedBlog = {
+      ...blogToUpdate,
+      likes: blogToUpdate.likes + 1,
+      user: blogToUpdate.user.id
+    }
+
+    try {
+    const returnedBlog = await blogService.update(blogToUpdate.id, updatedBlog)
+
+    // Update the blog list
+    setBlogs(blogs.map(b => b.id !== blogToUpdate.id ? b : returnedBlog))
+    } catch (error) {
+      console.error('Error updating likes:', error)
+    }
+  }
+
   const blogFormRef = useRef()
 
   if (user === null) {
@@ -170,9 +187,8 @@ const App = () => {
 
 
       {blogs
-        .filter(blog => blog.user && blog.user.username === user.username)
         .map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} onLike={handleLike} />
       )}
     </div>
   )
