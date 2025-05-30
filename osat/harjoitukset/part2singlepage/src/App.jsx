@@ -15,7 +15,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)  
+  const [user, setUser] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const App = () => {
     console.log(event.target.value)
     setNewNote(event.target.value)
   })
-  
+
 
   const notesToShow = showAll
     ? notes
@@ -77,7 +77,7 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
+
     try {
       const user = await loginService.login({
         username, password,
@@ -129,7 +129,7 @@ const App = () => {
         onChange={handleNoteChange}
       />
       <button type="submit">save</button>
-    </form>  
+    </form>
   )
 
   const noteFormRef = useRef()
@@ -143,10 +143,10 @@ const App = () => {
       {!user && loginForm()}
       {user && <div>
         <p>{user.name} logged in</p>
-          <Togglable buttonLabel='new note' ref={noteFormRef}>
-            <NoteForm createNote={addNote}/>
-          </Togglable>
-        </div>
+        <Togglable buttonLabel='new note' ref={noteFormRef}>
+          <NoteForm createNote={addNote}/>
+        </Togglable>
+      </div>
       }
 
       <h2>Notes</h2>
@@ -161,7 +161,7 @@ const App = () => {
           <Note key={note.id} note={note} toggleImportance={() => toggleImportanceOf(note.id)}/>
         )}
       </ul>
-      
+
       <Footer />
     </div>
   )

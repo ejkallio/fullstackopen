@@ -20,7 +20,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -31,43 +31,43 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-  
+
   const loginForm = () => (
     <div>
-    <h2>log in to application</h2>
+      <h2>log in to application</h2>
 
-    <Notification message={errorMessage} type="error" />
+      <Notification message={errorMessage} type="error" />
 
-    <form onSubmit={handleLogin}>
-      <div>
+      <form onSubmit={handleLogin}>
+        <div>
         username
           <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
+            type="text"
+            value={username}
+            name="Username"
+            onChange={({ target }) => setUsername(target.value)}
+          />
+        </div>
+        <div>
         password
           <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>  
-    </div> 
+            type="password"
+            value={password}
+            name="Password"
+            onChange={({ target }) => setPassword(target.value)}
+          />
+        </div>
+        <button type="submit">login</button>
+      </form>
+    </div>
   )
 
   const blogList = () => (
     <div>
-    <h2>blogs</h2>
-    {blogs.map(blog =>
-      <Blog key={blog.id} blog={blog} />
-    )}
+      <h2>blogs</h2>
+      {blogs.map(blog =>
+        <Blog key={blog.id} blog={blog} />
+      )}
     </div>
   )
 
@@ -156,14 +156,14 @@ const App = () => {
     }
 
     try {
-    const returnedBlog = await blogService.update(blogToUpdate.id, updatedBlog)
+      const returnedBlog = await blogService.update(blogToUpdate.id, updatedBlog)
 
-    const fullBlog = {
-      ...returnedBlog,
-      user: blogToUpdate.user
-    }  
-    
-    setBlogs(blogs.map(b => b.id !== blogToUpdate.id ? b : fullBlog))
+      const fullBlog = {
+        ...returnedBlog,
+        user: blogToUpdate.user
+      }
+
+      setBlogs(blogs.map(b => b.id !== blogToUpdate.id ? b : fullBlog))
     } catch (error) {
       console.error('Error updating likes:', error)
     }
@@ -172,7 +172,7 @@ const App = () => {
   const handleRemove = async (blogToRemove) => {
     const confirm = window.confirm(`Remove ${blogToRemove.title} by ${blogToRemove.author}`)
     if (!confirm) return
-    
+
     try {
       await blogService.remove(blogToRemove.id)
       setBlogs(blogs.filter(b => b.id !== blogToRemove.id))
@@ -206,8 +206,8 @@ const App = () => {
         .slice()
         .sort((a,b) => b.likes - a.likes)
         .map(blog =>
-        <Blog key={blog.id} blog={blog} onLike={handleLike} onRemove={handleRemove} currentUser={user} />
-      )}
+          <Blog key={blog.id} blog={blog} onLike={handleLike} onRemove={handleRemove} currentUser={user} />
+        )}
     </div>
   )
 }

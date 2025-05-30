@@ -1,6 +1,7 @@
-import Togglable from "./Togglable"
-import { useState } from "react"
+import Togglable from './Togglable'
+import { useState } from 'react'
 import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, onLike, onRemove, currentUser }) => {
 
@@ -15,21 +16,26 @@ const Blog = ({ blog, onLike, onRemove, currentUser }) => {
   const isOwner = blog.user?.username === currentUser?.username
 
   return (
-  <div style={blogStyle}>
-    <div>
-      {blog.title} {blog.author}
+    <div style={blogStyle}>
+      <div>
+        {blog.title} {blog.author}
+      </div>
+      <div>
+        <Togglable buttonLabel="view" hideLabel="hide">
+          <div>
+            <p>{blog.url}</p>
+            <p>{blog.likes} <button onClick={() => onLike(blog)}>like</button></p>
+            <p>{blog.user.name}</p>
+            {isOwner &&<button onClick={() => onRemove(blog)}>remove</button>}
+          </div>
+        </Togglable>
+      </div>
     </div>
-    <div>
-      <Togglable buttonLabel="view" hideLabel="hide">
-        <div>
-          <p>{blog.url}</p>
-          <p>{blog.likes} <button onClick={() => onLike(blog)}>like</button></p>
-          <p>{blog.user.name}</p>
-          {isOwner &&<button onClick={() => onRemove(blog)}>remove</button>}
-        </div>
-      </Togglable>
-    </div>
-  </div>  
-)}
+  )}
+
+Blog.propTypes = {
+  onLike: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired
+}
 
 export default Blog
