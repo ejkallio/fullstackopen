@@ -42,6 +42,7 @@ const App = () => {
         <div>
         username
           <input
+            data-testid='username'
             type="text"
             value={username}
             name="Username"
@@ -51,6 +52,7 @@ const App = () => {
         <div>
         password
           <input
+            data-testid='password'
             type="password"
             value={password}
             name="Password"
@@ -104,7 +106,9 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
+        setBlogs(blogs.concat({
+          ...returnedBlog,
+          user: user }))
         setMessage(`a new blog "${returnedBlog.title}" by ${returnedBlog.author} was added`)
         setTimeout(() => {
           setMessage(null)

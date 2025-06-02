@@ -16,7 +16,7 @@ const Blog = ({ blog, onLike, onRemove, currentUser }) => {
   const isOwner = blog.user?.username === currentUser?.username
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} data-testid="blog-item">
       <div>
         {blog.title} {blog.author}
       </div>
@@ -24,7 +24,7 @@ const Blog = ({ blog, onLike, onRemove, currentUser }) => {
         <Togglable buttonLabel="view" hideLabel="hide">
           <div>
             <p>{blog.url}</p>
-            <p>{blog.likes} <button onClick={() => onLike(blog)}>like</button></p>
+            <p data-testid="likes">{blog.likes} <button onClick={() => onLike(blog)}>like</button></p>
             <p>{blog.user.name}</p>
             {isOwner &&<button onClick={() => onRemove(blog)}>remove</button>}
           </div>
